@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weeb Games | Konsol & Oyun Satış</title>
+  <style>
+    :root{
+      --bg:#0f0f17;--card:#171727;--accent:#ff4d6d;--text:#eaeaf2;--muted:#a9a9bf;--ok:#32c48d;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:radial-gradient(1200px 600px at 20% -10%,#251948,transparent),
+      linear-gradient(180deg,#0b0b14, #0f0f17 40%, #0f0f17);
+      color:var(--text);font-family:Inter,Segoe UI,system-ui,-apple-system,sans-serif;
+    }
+    header{
+      position:sticky;top:0;z-index:10;background:#0b0b14cc;backdrop-filter:saturate(180%) blur(8px);
+      border-bottom:1px solid #26263a;
+    }
+    .bar{
+      max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:14px 20px;
+    }
+    .logo{
+      font-weight:800;letter-spacing:0.3px;color:white;
+    }
+    .logo span{color:var(--accent)}
+    .search{
+      flex:1;display:flex;gap:8px;
+    }
+    .search input, .search select{
+      background:var(--card);border:1px solid #2c2c44;color:var(--text);
+      padding:10px;border-radius:10px;outline:none;
+    }
+    .search input{flex:1}
+    .cart-btn{
+      margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--accent);
+      color:white;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700;
+    }
+    main{max-width:1100px;margin:24px auto;padding:0 20px}
+    .grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+    }
+    @media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:480px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg,#19192a,#141424);border:1px solid #26263a;border-radius:16px;
+      overflow:hidden;display:flex;flex-direction:column;box-shadow:0 6px 20px rgba(0,0,0,.25);
+    }
+    .card img{
+      width:100%;height:150px;object-fit:cover;border-bottom:1px solid #26263a;
+      background:#0b0b14;
+    }
+    .card .content{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;background:#26263a;color:#c3c3d9;
+      border-radius:10px;padding:6px 10px;font-size:12px
+    }
+    .title{font-weight:700}
+    .price{font-weight:800;color:#fff}
+    .actions{display:flex;gap:8px;margin-top:auto}
+    .btn{
+      flex:1;background:#26263a;border:1px solid #333356;color:#eaeaf2;padding:8px 10px;border-radius:10px;
+      cursor:pointer;font-weight:700
+    }
+    .btn.primary{background:var(--accent);border:none}
+    .btn.outline{background:transparent;border:1px solid #333356}
+    .muted{color:var(--muted);font-size:13px}
+    .pill{background:#1c1c2e;border:1px solid #2f2f4a;border-radius:999px;padding:8px 12px}
+    .toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+    .cart-panel{
+      position:fixed;top:0;right:0;width:380px;max-width:95vw;height:100vh;background:#121224;
+      border-left:1px solid #2a2a45;transform:translateX(100%);transition:transform .25s ease;
+      display:flex;flex-direction:column;z-index:20;
+    }
+    .cart-panel.open{transform:translateX(0)}
+    .cart-header{padding:14px 16px;border-bottom:1px solid #2a2a45;display:flex;align-items:center;gap:10px}
+    .cart-body{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+    .cart-item{display:flex;align-items:center;gap:10px;background:#181832;border:1px solid #2a2a45;border-radius:12px;padding:10px}
+    .cart-item img{width:56px;height:56px;object-fit:cover;border-radius:8px}
+    .cart-item .grow{flex:1}
+    .cart-footer{border-top:1px solid #2a2a45;padding:14px 16px}
+    .total{display:flex;justify-content:space-between;font-weight:800}
+    .checkout{margin-top:10px;width:100%;background:var(--ok);border:none;color:#062b1e;padding:12px;border-radius:12px;font-weight:900;cursor:pointer}
+    .empty{color:#a9a9bf;text-align:center;margin-top:40px}
+    footer{max-width:1100px;margin:24px auto;padding:0 20px;color:#9a9ab7}
+    .tag{display:inline-flex;gap:6px;align-items:center;background:#26263a;border:1px solid #333356;padding:6px 10px;border-radius:999px;font-size:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <div class="logo">Weeb <span>Games</span></div>
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="Ara: oyun adı, konsol..." />
+        <select id="platformSelect">
+          <option value="all">Tüm platformlar</option>
+          <option value="PS5">PS5</option>
+          <option value="Xbox Series">Xbox Series</option>
+          <option value="Nintendo Switch">Nintendo Switch</option>
+          <option value="PC">PC</option>
+        </select>
+        <select id="typeSelect">
+          <option value="all">Tür: hepsi</option>
+          <option value="game">Oyun</option>
+          <option value="console">Konsol</option>
+          <option value="accessory">Aksesuar</option>
+        </select>
+      </div>
+      <button class="cart-btn" id="cartOpenBtn">Sepet <span id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <div class="pill">En çok satanlar</div>
+      <div class="pill">Yeni çıkanlar</div>
+      <div class="pill">Weeb önerileri</div>
+    </div>
+
+  <div id="grid" class="grid">
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1606813907291-46a9892ce20b">
+    <div class="content">
+      <div class="badge">Konsol • PS5</div>
+      <div class="title">PlayStation 5 Standart</div>
+      <div class="price">₺25.999</div>
+      <div class="actions">
+        <a class="btn outline" href="ps5.html">İncele</a>
+        <button class="btn primary">Sepete ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1605901309584-24c3c1b4d5b6">
+    <div class="content">
+      <div class="badge">Konsol • Xbox</div>
+      <div class="title">Xbox Series X</div>
+      <div class="price">₺24.999</div>
+      <div class="actions">
+        <a class="btn outline" href="xbox.html">İncele</a>
+        <button class="btn primary">Sepete ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1606813907291-46a9892ce20b">
+    <div class="content">
+      <div class="badge">Konsol • pc</div>
+      <div class="title">pc  Standart</div>
+      <div class="price">₺25.999</div>
+      <div class="actions">
+        <a class="btn outline" href="pc.html">İncele</a>
+        <button class="btn primary">Sepete ekle</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1606813907291-46a9892ce20b">
+    <div class="content">
+      <div class="badge">Konsol • nintendo</div>
+      <div class="title">pc  Standart</div>
+      <div class="price">₺25.999</div>
+      <div class="actions">
+        <a class="btn outline" href="nintendo.html">İncele</a>
+        <button class="btn primary">Sepete ekle</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card">
+  <img src="https://images.unsplash.com/photo-1616606340421-4bdc2f9c884e">
+  <div class="content">
+    <div class="badge">Aksesuar • PS5</div>
+    <div class="title">DualSense Kablosuz Kontrolcü</div>
+    <div class="price">₺2.499</div>
+    <div class="actions">
+      <a class="btn outline" href="dualsense.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1606144047593-5e03d9455b06">
+  <div class="content">
+    <div class="badge">Aksesuar • Xbox</div>
+    <div class="title">Xbox Elite Controller</div>
+    <div class="price">₺3.499</div>
+    <div class="actions">
+      <a class="btn outline" href="xbox-elite.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1606909037767-83d31fbc2a53">
+  <div class="content">
+    <div class="badge">Aksesuar • Nintendo</div>
+    <div class="title">Switch Pro Controller</div>
+    <div class="price">₺2.699</div>
+    <div class="actions">
+      <a class="btn outline" href="switch-pro.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e">
+  <div class="content">
+    <div class="badge">Oyun • PS5</div>
+    <div class="title">Elden Ring</div>
+    <div class="price">₺1.599</div>
+    <div class="actions">
+      <a class="btn outline" href="elden-ring.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1516110833967-0b5716ca9a5e">
+  <div class="content">
+    <div class="badge">Oyun • Xbox</div>
+    <div class="title">Forza Horizon 5</div>
+    <div class="price">₺1.499</div>
+    <div class="actions">
+      <a class="btn outline" href="forza.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f">
+  <div class="content">
+    <div class="badge">Oyun • Nintendo</div>
+    <div class="title">Zelda: Tears of the Kingdom</div>
+    <div class="price">₺1.699</div>
+    <div class="actions">
+      <a class="btn outline" href="zelda.html">İncele</a>
+      <button class="btn primary">Sepete ekle</button>
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+
+  </main>
+
+  <aside id="cartPanel" class="cart-panel" aria-label="Alışveriş Sepeti">
+    <div class="cart-header">
+      <strong>Sepet</strong>
+      <button class="btn outline" id="cartCloseBtn">Kapat</button>
+    </div>
+    <div id="cartBody" class="cart-body"></div>
+    <div class="cart-footer">
+      <div class="total"><span>Toplam</span><span id="cartTotal">₺0</span></div>
+      <button class="checkout" id="checkoutBtn">Satın al</button>
+    </div>
+  </aside>
+
+  <footer>
+    <div class="muted">
+      Weeb Games — Konsol ve oyun satış sitesinin demo sürümü. Ödeme akışı örnektir; gerçek ödeme yoktur.
+    </div>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+      <span class="tag">Güvenli alışveriş</span>
+      <span class="tag">24 saat içinde kargo</span>
+      <span class="tag">Resmi distribütör</span>
+    </div>
+  </footer>
+
+  <script>
+    // Demo ürün verisi
+    const PRODUCTS = [
+      // Konsollar
+      { id: 'ps5-std', name: 'PlayStation 5 Standart', type: 'console', platform: 'PS5', price: 25999, stock: 12, img: 'https://images.unsplash.com/photo-1606813907291-46a9892ce20b?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'xbox-series-x', name: 'Xbox Series X', type: 'console', platform: 'Xbox Series', price: 24999, stock: 8, img: 'https://images.unsplash.com/photo-1605901309584-24c3c1b4d5b6?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'switch-oled', name: 'Nintendo Switch OLED', type: 'console', platform: 'Nintendo Switch', price: 17999, stock: 6, img: 'https://images.unsplash.com/photo-1612036782181-1b1a3b6a2a73?q=80&w=1200&auto=format&fit=crop' },
+      // Oyunlar
+      { id: 'elden-ring', name: 'Elden Ring', type: 'game', platform: 'PS5', price: 1599, stock: 25, img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'forza', name: 'Forza Horizon 5', type: 'game', platform: 'Xbox Series', price: 1499, stock: 20, img: 'https://images.unsplash.com/photo-1516110833967-0b5716ca9a5e?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'zelda-totk', name: 'Zelda: Tears of the Kingdom', type: 'game', platform: 'Nintendo Switch', price: 1699, stock: 18, img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'cyberpunk', name: 'Cyberpunk 2077', type: 'game', platform: 'PC', price: 1299, stock: 30, img: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop' },
+      // Aksesuarlar
+      { id: 'dualSense', name: 'DualSense Kablosuz Kontrolcü', type: 'accessory', platform: 'PS5', price: 2499, stock: 15, img: 'https://images.unsplash.com/photo-1616606340421-4bdc2f9c884e?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'xbox-elite', name: 'Xbox Elite Controller', type: 'accessory', platform: 'Xbox Series', price: 3499, stock: 10, img: 'https://images.unsplash.com/photo-1606144047593-5e03d9455b06?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'switch-pro', name: 'Switch Pro Controller', type: 'accessory', platform: 'Nintendo Switch', price: 2699, stock: 9, img: 'https://images.unsplash.com/photo-1606909037767-83d31fbc2a53?q=80&w=1200&auto=format&fit=crop' }
+    ];
+
+    // Basit state
+    const state = {
+      query: '',
+      platform: 'all',
+      type: 'all',
+      cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]')
+    };
+
+    // Araçlar
+    const formatPrice = (n) => '₺' + n.toLocaleString('tr-TR');
+    const saveCart = () => localStorage.setItem('weeb_cart', JSON.stringify(state.cart));
+    const cartCountEl = document.getElementById('cartCount');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartBody = document.getElementById('cartBody');
+    const grid = document.getElementById('grid');
+
+    // Filtreleme ve render
+    function applyFilters() {
+      const q = state.query.trim().toLowerCase();
+      return PRODUCTS.filter(p => {
+        const matchesQuery = q ? (p.name.toLowerCase().includes(q) || p.platform.toLowerCase().includes(q)) : true;
+        const matchesPlatform = state.platform === 'all' ? true : p.platform === state.platform;
+        const matchesType = state.type === 'all' ? true : p.type === state.type;
+        return matchesQuery && matchesPlatform && matchesType;
+      });
+    }
+
+    function renderGrid() {
+      const items = applyFilters();
+      grid.innerHTML = items.map(p => `
+        <div class="card">
+          <img src="${p.img}" alt="${p.name}" loading="lazy">
+          <div class="content">
+            <div class="badge">${p.type === 'game' ? 'Oyun' : p.type === 'console' ? 'Konsol' : 'Aksesuar'} • ${p.platform}</div>
+            <div class="title">${p.name}</div>
+            <div class="muted">${p.stock > 0 ? (p.stock < 5 ? 'Sınırlı stok!' : 'Stokta mevcut') : 'Tükendi'}</div>
+            <div class="price">${formatPrice(p.price)}</div>
+            <div class="actions">
+             <a class="btn outline" href="ps5.html">İncele</a>
+             <a class="btn outline" href="xbox.html">İncele</a>
+             <a class="btn outline" href="nintendo.html">İncele</a>
+              <button class="btn primary" ${p.stock===0?'disabled':''} onclick="addToCart('${p.id}')">Sepete ekle</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Ürün detay (basit alert ile)
+    function viewDetail(id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p) return;
+      alert(`${p.name}\nTür: ${p.type}\nPlatform: ${p.platform}\nFiyat: ${formatPrice(p.price)}\nStok: ${p.stock}`);
+    }
+
+    // Sepet işlemleri
+    function addToCart(id) {
+      const p = PRODUCTS.find(x => x.id === id);
+      if (!p || p.stock === 0) return;
+      const existing = state.cart.find(x => x.id === id);
+      if (existing) {
+        if (existing.qty < p.stock) existing.qty++;
+      } else {
+        state.cart.push({ id, qty: 1 });
+      }
+      saveCart();
+      renderCart();
+      bumpCartCount();
+      openCart();
+    }
+
+    function removeFromCart(id) {
+      state.cart = state.cart.filter(x => x.id !== id);
+      saveCart();
+      renderCart();
+      bumpCartCount();
+    }
+
+    function changeQty(id, delta) {
+      const item = state.cart.find(x => x.id === id);
+      if (!item) return;
+      const stock = PRODUCTS.find(x => x.id === id)?.stock || 1;
+      item.qty = Math.max(1, Math.min(stock, item.qty + delta));
+      saveCart();
+      renderCart();
+      bumpCartCount();
+    }
+
+    function cartTotal() {
+      return state.cart.reduce((sum, c) => {
+        const p = PRODUCTS.find(x => x.id === c.id);
+        return sum + (p ? p.price * c.qty : 0);
+      }, 0);
+    }
+
+    function renderCart() {
+      if (state.cart.length === 0) {
+        cartBody.innerHTML = `<div class="empty">Sepetin boş. Biraz weeb güç topla ve oyun ekle.</div>`;
+      } else {
+        cartBody.innerHTML = state.cart.map(c => {
+          const p = PRODUCTS.find(x => x.id === c.id);
+          if (!p) return '';
+          return `
+            <div class="cart-item">
+              <img src="${p.img}" alt="${p.name}">
+              <div class="grow">
+                <div style="font-weight:700">${p.name}</div>
+                <div class="muted">${p.platform} • ${p.type === 'game' ? 'Oyun' : p.type === 'console' ? 'Konsol' : 'Aksesuar'}</div>
+                <div style="margin-top:6px;color:#fff">${formatPrice(p.price)} x ${c.qty} = <strong>${formatPrice(p.price*c.qty)}</strong></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                <div style="display:flex;gap:6px">
+                  <button class="btn" onclick="changeQty('${c.id}', -1)">-</button>
+                  <span class="badge">${c.qty}</span>
+                  <button class="btn" onclick="changeQty('${c.id}', 1)">+</button>
+                </div>
+                <button class="btn outline" onclick="removeFromCart('${c.id}')">Kaldır</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      document.getElementById('cartTotal').textContent = formatPrice(cartTotal());
+      bumpCartCount();
+    }
+
+    function bumpCartCount() {
+      const count = state.cart.reduce((a,b)=>a+b.qty,0);
+      cartCountEl.textContent = count;
+    }
+
+    // Panel kontrol
+    function openCart(){ cartPanel.classList.add('open'); }
+    function closeCart(){ cartPanel.classList.remove('open'); }
+
+    // Eventler
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.query = e.target.value; renderGrid();
+    });
+    document.getElementById('platformSelect').addEventListener('change', e => {
+      state.platform = e.target.value; renderGrid();
+    });
+    document.getElementById('typeSelect').addEventListener('change', e => {
+      state.type = e.target.value; renderGrid();
+    });
+    document.getElementById('cartOpenBtn').addEventListener('click', openCart);
+    document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      if (state.cart.length === 0) return alert('Sepetin boş.');
+      alert('Demo: Ödeme akışı burada entegre edilir. (Örn: Iyzico/PayTR/Stripe)');
+    });
+
+    // İlk render
+   
+    renderCart();
+    
+  </script>
+</body>
+</html>
