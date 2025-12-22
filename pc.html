@@ -18,14 +18,14 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   /* resmin maksimum genişliği */
-  height: auto;
-  display: block;
-  margin: 0 auto;     /* ortalamak için */
-  border-radius: 12px;
-}
+    img {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -54,18 +54,15 @@
       background:#32c48d;
       color:#062b1e;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border: radius 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
+    .back {
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:10px;
+    }
   </style>
 </head>
 <body>
@@ -73,41 +70,72 @@
   <div class="card">
     <h1>Pc Standart</h1>
 
-    <img src="https://breunor.com/cdn/shop/files/rossa_7b01eaf6-eb4f-45b2-9437-c00d4b4dc97d.jpg?v=1765271046&width=1024" >
+    <img src="https://breunor.com/cdn/shop/files/rossa_7b01eaf6-eb4f-45b2-9437-c00d4b4dc97d.jpg?v=1765271046&width=1024">
 
-    <p class="price">₺25.999</p>
+    <p class="price">25.999 ₺</p>
     <p class="stock">Stok Durumu: 5 adet mevcut</p>
 
     <p>
-      Oyun bilgisayarı, yüksek performanslı donanımıyla akıcı ve hızlı bir oyun deneyimi sunar. Güçlü işlemci, gelişmiş ekran kartı ve yüksek çözünürlüklü grafik desteği ile öne çıkar.
+      Oyun bilgisayarı, yüksek performanslı donanımıyla akıcı ve hızlı bir oyun deneyimi sunar.
+      Güçlü işlemci, gelişmiş ekran kartı ve yüksek çözünürlüklü grafik desteği ile öne çıkar.
     </p>
+
+    
+    <input 
+      type="number" 
+      id="qty" 
+      min="0"
+      value="1" 
+      style="width:60px; margin-bottom:10px;"
+    >
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
   <script>
+    const stock = 5;
+
     function addToCart() {
-      const product = {
-        id: "pc",
-        name: "Pc Standart",
-        price: 25999,
-        qty: 1
-      };
+      const qtyInput = document.getElementById("qty");
+      const qty = parseInt(qtyInput.value);
+
+      if (qty > stock) {
+        alert("Seçtiğiniz adet stoktan fazla ❌");
+        qtyInput.value = stock;
+        return;
+      }
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
 
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.qty += 1;
+      const item = cart.find(i => i.id === "pc-standart");
+
+      if (item) {
+        item.qty += qty;
       } else {
-        cart.push(product);
+        cart.push({
+          id: "pc-standart",
+          name: "Pc Standart",
+          price: 25999,
+          qty: qty
+        });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("Pc sepete eklendi 🛒");
+
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+
+      setTimeout(() => {
+        btn.innerText = "🛒 Sepete Ekle";
+      }, 2000);
     }
   </script>
 
