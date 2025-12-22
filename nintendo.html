@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nintendo Switch Detay</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background:#0f0f17;
+            color:#fff;
+            margin:0;
+            padding:20px;
+        }
+        .card {
+            max-width:600px;
+            margin:auto;
+            background:#171727;
+            padding:20px;
+            border-radius:12px;
+        }
+        img {
+            width: 100%;
+            max-width: 350px;   /* resmin maksimum genişliği */
+            height: auto;
+            display: block;
+            margin: 0 auto;     /* ortalamak için */
+            border-radius: 12px;
+        }
+        .price {
+            font-size:24px;
+            font-weight:bold;
+            color:#ff4d6d;
+        }
+        .stock {
+            margin-top:10px;
+            color:#32c48d;
+        }
+        .actions {
+            margin-top:20px;
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        button {
+            flex:1;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+        .add {
+            background:#32c48d;
+            color:#062b1e;
+        }
+        .back {
+            background:#ff4d6d;
+            color:#fff;
+            text-decoration:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size: 16px;
+            cursor: pointer;
+            box-sizing: border-box;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Nintendo Switch OLED</h1>
+
+    <img src="https://cdn.akakce.com/z/nintendo/nintendo-switch.jpg" >
+
+    <p class="price">₺17.999</p>
+    <p class="stock">Stok Durumu: 6 adet mevcut</p>
+
+    <p>
+        Nintendo'nun en sevilen oyun konsolu switch şimdi OLED ekranıyla oyuncularla buluşuyor. Geniş birikim araçları canlı renkler ve yüksek kontrast, ister en yüksek hızda yarışın ister düşmanlara karşı savaşta zengin bir elde kulanım ve masaüstü oyun deneyimi sunarak oyunlara hayat verir.
+    </p>
+
+    <div class="actions">
+        <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
+        <a href="index.html" class="back">← Ana Sayfaya Dön</a>
+    </div>
+</div>
+
+<script>
+    function addToCart() {
+        const product = {
+            id: "switch-oled",
+            name: "Nintendo Switch OLED",
+            price: 17999,
+            qty: 1
+        };
+
+        let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+        const existing = cart.find(item => item.id === product.id);
+        if (existing) {
+            existing.qty += 1;
+        } else {
+            cart.push(product);
+        }
+
+        localStorage.setItem("weeb_cart", JSON.stringify(cart));
+        alert("Nintendo Switch OLED sepete eklendi 🛒");
+    }
+</script>
+
+</body>
+</html>
