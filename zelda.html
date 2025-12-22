@@ -20,10 +20,10 @@
         }
         img {
             width: 100%;
-            max-width: 350px;   /* resmin maksimum genişliği */
+            max-width: 350px;
             height: auto;
             display: block;
-            margin: 0 auto;     /* ortalamak için */
+            margin: 0 auto;
             border-radius: 12px;
         }
         .price {
@@ -63,11 +63,16 @@
             justify-content:center;
             font-size: 16px;
             cursor: pointer;
-            box-sizing: border-box;
             border-radius: 10px;
             padding: 12px;
             font-weight: bold;
             flex: 1;
+        }
+        .qty {
+            width:70px;
+            padding:6px;
+            font-size:16px;
+            margin-top:10px;
         }
     </style>
 </head>
@@ -76,14 +81,26 @@
 <div class="card">
     <h1>Zelda: Tears of the Kingdom</h1>
 
-    <img src="https://i0.shbdn.com/photos/53/15/42/x5_1102531542emt.jpg" >
+    <img src="https://i0.shbdn.com/photos/53/15/42/x5_1102531542emt.jpg">
 
     <p class="price">₺1.699</p>
-    <p class="stock">Stok Durumu: 18 adet mevcut</p>
+    <p class="stock">Stok Durumu: <span id="stockText">18</span> adet mevcut</p>
 
     <p>
-      Zelda: Tears Of The Kingdom Nintendo Switch oyunları arasındadır ve aksiyon macera türünde deneyim yaşatır. RPG oyunları arasında bulunan Zelde Tears Of The Kingdom, Nintendo Switch yapımı olup orijinal bir oyundur. The Legent of Zelda serisinden olan konsol oyunu, Nintendo tarafından geliştirilmiştir ve Handhelp Mode, TV Mode, Tabletop Mode desteklenir.
+        Zelda: Tears of the Kingdom, aksiyon ve macerayı bir araya getiren
+        efsanevi bir Nintendo Switch oyunudur. Geniş açık dünyası, derin hikâyesi
+        ve yenilikçi oynanış mekanikleriyle oyunculara unutulmaz bir deneyim sunar.
+        Handheld, TV ve Tabletop modlarını destekler.
     </p>
+
+    <!-- SAYAÇ -->
+    <input 
+        type="number"
+        id="qty"
+        class="qty"
+        min="1"
+        value="1"
+    >
 
     <div class="actions">
         <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -92,25 +109,46 @@
 </div>
 
 <script>
+    const stock = 18;
+
     function addToCart() {
-        const product = {
-            id: "zelda-totk",
-            name: "Zelda: Tears of the Kingdom",
-            price: 1699,
-            qty: 1
-        };
+        const qtyInput = document.getElementById("qty");
+        let qty = parseInt(qtyInput.value);
+
+        if (qty < 1) {
+            alert("En az 1 adet seçmelisiniz ❌");
+            return;
+        }
+
+        if (qty > stock) {
+            alert("Seçtiğiniz adet stoktan fazla ❌");
+            qtyInput.value = stock;
+            return;
+        }
 
         let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-        const existing = cart.find(item => item.id === product.id);
+        const existing = cart.find(item => item.id === "zelda-totk");
+
         if (existing) {
-            existing.qty += 1;
+            existing.qty += qty;
         } else {
-            cart.push(product);
+            cart.push({
+                id: "zelda-totk",
+                name: "Zelda: Tears of the Kingdom",
+                price: 1699,
+                qty: qty
+            });
         }
 
         localStorage.setItem("weeb_cart", JSON.stringify(cart));
-        alert("Zelda: Tears of the Kingdom sepete eklendi 🛒");
+
+        const btn = document.querySelector(".add");
+        btn.innerText = "✔ Sepete Eklendi";
+
+        setTimeout(() => {
+            btn.innerText = "🛒 Sepete Ekle";
+        }, 2000);
     }
 </script>
 
