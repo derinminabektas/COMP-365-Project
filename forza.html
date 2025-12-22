@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Forza Detay</title>
+  <title>Forza Horizon 5</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,13 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   
-  height: auto;
-  display: block;
-  margin: 0 auto;    
-  border-radius: 12px;
-}
+    img {
+      width:100%;
+      max-width:350px;
+      display:block;
+      margin:0 auto;
+      border-radius:12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -35,84 +34,122 @@
       margin-top:10px;
       color:#32c48d;
     }
+    .qty-box {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:15px;
+    }
+    .qty-box button {
+      width:36px;
+      height:36px;
+      font-size:18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      background:#26263a;
+      color:#fff;
+    }
+    .qty-box input {
+      width:50px;
+      text-align:center;
+      font-size:16px;
+      border-radius:8px;
+      border:none;
+    }
     .actions {
       margin-top:20px;
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
     }
-    button {
+    .add {
       flex:1;
-      padding:12px;
+      background:#32c48d;
+      color:#062b1e;
       border:none;
+      padding:12px;
       border-radius:10px;
-      font-size:16px;
       font-weight:bold;
       cursor:pointer;
     }
-    .add {
-      background:#32c48d;
-      color:#062b1e;
+    .back {
+      flex:1;
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:10px;
+      font-weight:bold;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 16px;
-  cursor: pointer;
-  box-sizing: border-box;
-  border-radius: 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h1>Forza Horizon 5 game </h1>
+<div class="card">
+  <h1>Forza Horizon 5</h1>
 
-    <img src="https://m.media-amazon.com/images/I/81dHdXKHyPL._AC_UF1000,1000_QL80_.jpg" >
+  <img src="https://m.media-amazon.com/images/I/81dHdXKHyPL._AC_UF1000,1000_QL80_.jpg">
 
-    <p class="price">₺1.499</p>
-    <p class="stock">Stok Durumu: 20 adet mevcut</p>
+  <p class="price">1.499 ₺</p>
+  <p class="stock">Stok Durumu: 20 adet mevcut</p>
 
-    <p>
- Forza Horizon 5, Meksika’nın büyüleyici ve çeşitli açık dünyasında geçen, yüksek tempolu bir yarış deneyimi sunar. Gerçekçi sürüş dinamikleri, detaylı araç modellemeleri ve dinamik hava koşullarıyla her yarışta farklı bir heyecan yaşatır.
-    </p>
+  <p>
+    Forza Horizon 5, Meksika’nın büyüleyici açık dünyasında geçen
+    yüksek tempolu bir yarış deneyimi sunar.
+  </p>
 
-    <div class="actions">
-      <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
-    </div>
+ 
+  <div class="qty-box">
+    <button onclick="changeQty(-1)">−</button>
+    <input type="number" id="qty" value="1" min="1">
+    <button onclick="changeQty(1)">+</button>
   </div>
 
-  <script>
-    function addToCart() {
-      const product = {
-        id: "forza",
-        name: "Forza Horizon 5",
-        price: 1499,
-        qty: 1
-      };
+  <div class="actions">
+    <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
+    <a href="index.html" class="back">← Ana Sayfa</a>
+  </div>
+</div>
 
-      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+<script>
+  const PRODUCT_ID = "forza";
+  const STOCK = 20;
 
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.qty += 1;
-      } else {
-        cart.push(product);
+  function changeQty(delta) {
+    const input = document.getElementById("qty");
+    let value = parseInt(input.value) + delta;
+
+    if (value < 1) value = 1;
+    if (value > STOCK) value = STOCK;
+
+    input.value = value;
+  }
+
+  function addToCart() {
+    const qty = parseInt(document.getElementById("qty").value);
+    let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+    const item = cart.find(i => i.id === PRODUCT_ID);
+
+    if (item) {
+      if (item.qty + qty > STOCK) {
+        alert("Stok sınırı aşıldı ❌");
+        return;
       }
-
-      localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("Forza Horizon 5 sepete eklendi 🛒");
+      item.qty += qty;
+    } else {
+      cart.push({ id: PRODUCT_ID, qty });
     }
-  </script>
+
+    localStorage.setItem("weeb_cart", JSON.stringify(cart));
+
+    const btn = document.querySelector(".add");
+    btn.innerText = "✔ Sepete Eklendi";
+    setTimeout(() => btn.innerText = "🛒 Sepete Ekle", 2000);
+  }
+</script>
 
 </body>
 </html>
