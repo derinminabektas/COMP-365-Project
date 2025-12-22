@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Cyberpunk Detay</title>
+  <title>Cyberpunk 2077 | Ürün Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,13 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   
-  height: auto;
-  display: block;
-  margin: 0 auto;    
-  border-radius: 12px;
-}
+    img {
+      width:100%;
+      max-width:350px;
+      display:block;
+      margin:0 auto;
+      border-radius:12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -54,36 +53,45 @@
       background:#32c48d;
       color:#062b1e;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 16px;
-  cursor: pointer;
-  box-sizing: border-box;
-  border-radius: 10px;
-  padding: 12px;       
-  font-weight: bold;
-  flex: 1;
-}
+     .back {
+            background:#ff4d6d;
+            color:#fff;
+            text-decoration:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            flex: 1;
+        }
+    input {
+      width:70px;
+      padding:6px;
+      margin-top:10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>Cyberpunk 2077 game </h1>
+    <h1>Cyberpunk 2077</h1>
 
-    <img src="https://image.api.playstation.com/vulcan/ap/rnd/202111/3013/bxSj4jO0KBqUgAbH3zuNjCje.jpg" >
+    <img src="https://image.api.playstation.com/vulcan/ap/rnd/202111/3013/bxSj4jO0KBqUgAbH3zuNjCje.jpg">
 
-    <p class="price">₺1.299</p>
-    <p class="stock">Stok Durumu: 30 adet mevcut</p>
+    <p class="price">1.299 ₺</p>
+    <p class="stock">Stok Durumu: <strong>30</strong> adet</p>
 
     <p>
-Cyberpunk 2077, Night City’nin neon ışıklarıyla dolu distopik dünyasında geçen, hikâye odaklı bir aksiyon-RPG deneyimi sunar. Derin karakter geliştirme sistemi, özgür oynanış seçenekleri ve etkileyici görsel atmosferiyle oyunculara tamamen kişiselleştirilebilir bir macera yaşatır. Yoğun çatışmalar, sürükleyici görevler ve güçlü anlatımıyla bilim kurgu severler için unutulmaz bir deneyim sağlar.
+      Cyberpunk 2077, Night City’nin neon ışıklarıyla dolu distopik dünyasında geçen,
+      hikâye odaklı bir aksiyon-RPG deneyimi sunar. Derin karakter geliştirme sistemi,
+      özgür oynanış seçenekleri ve etkileyici atmosferiyle unutulmaz bir macera yaşatır.
     </p>
+
+    <label>Adet:</label><br>
+    <input type="number" id="qty" min="1" value="1">
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -92,25 +100,46 @@ Cyberpunk 2077, Night City’nin neon ışıklarıyla dolu distopik dünyasında
   </div>
 
   <script>
+    const STOCK = 30;
+
     function addToCart() {
-      const product = {
-        id: "cyberpunk",
-        name: "Cyberpunk 2077",
-        price: 1299,
-        qty: 1
-      };
+      const qtyInput = document.getElementById("qty");
+      let qty = parseInt(qtyInput.value);
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
+
+      if (qty > STOCK) {
+        alert("Stoktan fazla seçemezsiniz");
+        qty = STOCK;
+        qtyInput.value = STOCK;
+        return;
+      }
 
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(item => item.id === product.id);
+      const existing = cart.find(i => i.id === "cyberpunk");
+
       if (existing) {
-        existing.qty += 1;
+        if (existing.qty + qty > STOCK) {
+          existing.qty = STOCK;
+        } else {
+          existing.qty += qty;
+        }
       } else {
-        cart.push(product);
+        cart.push({
+          id: "cyberpunk",
+          qty: qty
+        });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("Cyberpunk 2077 sepete eklendi 🛒");
+
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+      setTimeout(() => btn.innerText = "🛒 Sepete Ekle", 2000);
     }
   </script>
 
