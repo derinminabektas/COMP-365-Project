@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Xbox Detay</title>
+  <title>Pc Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,14 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   /* resmin maksimum genişliği */
-  height: auto;
-  display: block;
-  margin: 0 auto;     /* ortalamak için */
-  border-radius: 12px;
-}
+    img {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -54,59 +54,99 @@
       background:#32c48d;
       color:#062b1e;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border: radius 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
+    .back {
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>xbox series x </h1>
+    <h1>Xbox Series X</h1>
 
-    <img src="https://cdn03.ciceksepeti.com/cicek/kcm78499017-1/L/xbox-series-x-1-tb-ssd-cift-kol-xbox-x-xbox-x-xbox-xbox-xbox-series-x-ikinci-el-kcm78499017-1-e92e852939a746ba850f8e930c0616f0.jpg" >
+    <img src="https://cdn03.ciceksepeti.com/cicek/kcm78499017-1/L/xbox-series-x-1-tb-ssd-cift-kol-xbox-x-xbox-x-xbox-xbox-xbox-series-x-ikinci-el-kcm78499017-1-e92e852939a746ba850f8e930c0616f0.jpg">
 
-    <p class="price">₺24.999</p>
+    <p class="price">24.999 ₺</p>
     <p class="stock">Stok Durumu: 8 adet mevcut</p>
 
     <p>
-      Xbox Series X, güçlü donanımı sayesinde akıcı ve hızlı bir oyun deneyimi sunar. Yüksek performanslı işlemcisi, gelişmiş grafik gücü ve yüksek çözünürlüklü oyun desteği ile öne çıkar.
+      Xbox Series X, güçlü donanımı sayesinde akıcı ve hızlı bir oyun deneyimi sunar.
+      Yüksek performanslı işlemcisi ve gelişmiş grafik gücü ile öne çıkar.
     </p>
+
+    
+    <input 
+      type="number" 
+      id="qty" 
+      min="0"   
+      value="1" 
+      style="width:60px; margin-bottom:10px;"
+    >
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
   <script>
-     function addToCart() {
-    let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+    const stock = 8;
 
-    const item = cart.find(i => i.id === "xbox-series-x");
+    function addToCart() {
+      const qtyInput = document.getElementById("qty");
+      const qty = parseInt(qtyInput.value);
 
-    if (item) {
-      item.qty += 1;
-    } else {
-      cart.push({
-        id: "xbox-series-x",
-        qty: 1
-      });
+      if (qty > stock) {
+        alert("Seçtiğiniz adet stoktan fazla ❌");
+        qtyInput.value = stock;
+        return;
+      }
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+      const item = cart.find(i => i.id === "xbox-series-x");
+
+      if (item) {
+        item.qty += qty;
+      } else {
+        cart.push({
+          id: "xbox-series-x",
+          name: "Xbox Series X",
+          price: 24999,
+          qty: qty
+        });
+      }
+
+      localStorage.setItem("weeb_cart", JSON.stringify(cart));
+
+      
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+
+      setTimeout(() => {
+        btn.innerText = "🛒 Sepete Ekle";
+      }, 2000);
     }
+  </script>
 
+</body>
+</html>
     localStorage.setItem("weeb_cart", JSON.stringify(cart));
     alert("Xbox Series X sepete eklendi 🛒");
   }
   </script>
 
 </body>
+
 </html>
