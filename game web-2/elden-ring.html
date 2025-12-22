@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pc Detay</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#0f0f17;
+      color:#fff;
+      margin:0;
+      padding:20px;
+    }
+    .card {
+      max-width:600px;
+      margin:auto;
+      background:#171727;
+      padding:20px;
+      border-radius:12px;
+    }
+   img {
+  width: 100%;
+  max-width: 350px;   
+  height: auto;
+  display: block;
+  margin: 0 auto;    
+  border-radius: 12px;
+}
+    .price {
+      font-size:24px;
+      font-weight:bold;
+      color:#ff4d6d;
+    }
+    .stock {
+      margin-top:10px;
+      color:#32c48d;
+    }
+    .actions {
+      margin-top:20px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button {
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .add {
+      background:#32c48d;
+      color:#062b1e;
+    }
+   .back {
+  background:#ff4d6d;
+  color:#fff;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: radius 1px;; 
+}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Elden Ring game </h1>
+
+    <img src="https://i0.shbdn.com/photos/94/79/94/x5_1220947994btj.jpg" >
+
+    <p class="price">₺1.599</p>
+    <p class="stock">Stok Durumu: 25 adet mevcut</p>
+
+    <p>
+    Elden Ring, geniş ve karanlık açık dünyasıyla oyunculara keşif özgürlüğü sunar. Zorlu düşmanlar, derin hikâye anlatımı ve stratejiye dayalı savaş sistemiyle unutulmaz bir aksiyon-RPG deneyimi yaşatır. Etkileyici atmosferi, güçlü boss savaşları ve yüksek tekrar oynanabilirliği sayesinde oyuncuları uzun süre ekran başına kilitler.
+    </p>
+
+    <div class="actions">
+      <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
+      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+    </div>
+  </div>
+
+  <script>
+    function addToCart() {
+      const product = {
+        id: "elden-ring",
+        name: "Elden Ring",
+        price: 1599,
+        qty: 1
+      };
+
+      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push(product);
+      }
+
+      localStorage.setItem("weeb_cart", JSON.stringify(cart));
+      alert("elden ring sepete eklendi 🛒");
+    }
+  </script>
+
+</body>
+</html>

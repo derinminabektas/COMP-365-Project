@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pc Detay</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#0f0f17;
+      color:#fff;
+      margin:0;
+      padding:20px;
+    }
+    .card {
+      max-width:600px;
+      margin:auto;
+      background:#171727;
+      padding:20px;
+      border-radius:12px;
+    }
+   img {
+  width: 100%;
+  max-width: 350px;   /* resmin maksimum genişliği */
+  height: auto;
+  display: block;
+  margin: 0 auto;     /* ortalamak için */
+  border-radius: 12px;
+}
+    .price {
+      font-size:24px;
+      font-weight:bold;
+      color:#ff4d6d;
+    }
+    .stock {
+      margin-top:10px;
+      color:#32c48d;
+    }
+    .actions {
+      margin-top:20px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button {
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .add {
+      background:#32c48d;
+      color:#062b1e;
+    }
+   .back {
+  background:#ff4d6d;
+  color:#fff;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: radius 1px;; 
+}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>Pc Standart</h1>
+
+    <img src="https://breunor.com/cdn/shop/files/rossa_7b01eaf6-eb4f-45b2-9437-c00d4b4dc97d.jpg?v=1765271046&width=1024" >
+
+    <p class="price">₺25.999</p>
+    <p class="stock">Stok Durumu: 5 adet mevcut</p>
+
+    <p>
+      Oyun bilgisayarı, yüksek performanslı donanımıyla akıcı ve hızlı bir oyun deneyimi sunar. Güçlü işlemci, gelişmiş ekran kartı ve yüksek çözünürlüklü grafik desteği ile öne çıkar.
+    </p>
+
+    <div class="actions">
+      <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
+      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+    </div>
+  </div>
+
+  <script>
+    function addToCart() {
+      const product = {
+        id: "pc",
+        name: "Pc Standart",
+        price: 25999,
+        qty: 1
+      };
+
+      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push(product);
+      }
+
+      localStorage.setItem("weeb_cart", JSON.stringify(cart));
+      alert("Pc sepete eklendi 🛒");
+    }
+  </script>
+
+</body>
+</html>

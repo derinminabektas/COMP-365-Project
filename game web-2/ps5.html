@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>PlayStation 5 Detay</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background:#0f0f17;
+      color:#fff;
+      margin:0;
+      padding:20px;
+    }
+    .card {
+      max-width:600px;
+      margin:auto;
+      background:#171727;
+      padding:20px;
+      border-radius:12px;
+    }
+     img {
+  width: 100%;
+  max-width: 350px;   /* resmin maksimum genişliği */
+  height: auto;
+  display: block;
+  margin: 0 auto;     /* ortalamak için */
+  border-radius: 12px;
+}
+    .price {
+      font-size:24px;
+      font-weight:bold;
+      color:#ff4d6d;
+    }
+    .stock {
+      margin-top:10px;
+      color:#32c48d;
+    }
+    .actions {
+      margin-top:20px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    button {
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .add {
+      background:#32c48d;
+      color:#062b1e;
+    }
+   .back {
+  background:#ff4d6d;
+  color:#fff;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: radius 1px;; 
+}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>PlayStation 5 pro</h1>
+
+    <img src="https://cdn.myikas.com/images/e737b8d4-9417-41ee-8583-1bac53f2726a/f5bc2781-12c3-4fd2-8c7f-7e8bc09cb985/3840/asset-mms-147359875.webp">
+
+    <p class="price">37.999</p>
+    <p class="stock">Stok Durumu: 12 adet mevcut</p>
+
+    <p>
+      PlayStation 5, Sony’nin yeni nesil konsolu.
+      Ultra hızlı SSD, DualSense kontrolcü ve 4K oyun deneyimi sunar.
+    </p>
+
+    <div class="actions">
+      <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
+      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+    </div>
+  </div>
+
+  <script>
+    function addToCart() {
+      const product = {
+        id: "ps5-std",
+        name: "PlayStation 5 Standart",
+        price: 37999,
+        qty: 1
+      };
+
+      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push(product);
+      }
+
+      localStorage.setItem("weeb_cart", JSON.stringify(cart));
+      alert("PlayStation 5 sepete eklendi 🛒");
+    }
+  </script>
+
+</body>
+</html>
