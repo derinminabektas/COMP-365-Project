@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Xbox  Detay</title>
+  <title>Ürün Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,14 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   
-  height: auto;
-  display: block;
-  margin: 0 auto;    
-  border-radius: 12px;
-}
+    img {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -54,36 +54,41 @@
       background:#32c48d;
       color:#062b1e;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 16px;
-  cursor: pointer;
-  box-sizing: border-box;
-  border-radius: 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
+    .back {
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>Xbox Elite Controller </h1>
+    <h1>Xbox Elite Controller</h1>
 
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdU8Az1XThWLkdHqQ46R0RumgCIECJA6ETIQ&s" >
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdU8Az1XThWLkdHqQ46R0RumgCIECJA6ETIQ&s">
 
-    <p class="price">₺4.999</p>
+    <p class="price">4.999 ₺</p>
     <p class="stock">Stok Durumu: 10 adet mevcut</p>
 
     <p>
-      Xbox Elite kontrolcü, özelleştirilebilir parçaları ve yüksek hassasiyetli tetikleriyle üst düzey oyun performansı sunar. Ergonomik tasarımı ve gelişmiş kontrol özellikleri ile deneyimi bir üst seviyeye taşır.
+      Xbox Elite kontrolcü, özelleştirilebilir parçaları ve yüksek hassasiyetli tetikleriyle
+      üst düzey oyun performansı sunar. Ergonomik tasarımı ve gelişmiş kontrol özellikleri
+      ile deneyimi bir üst seviyeye taşır.
     </p>
+
+    
+    <input
+      type="number"
+      id="qty"
+      min="1"
+      value="1"
+      style="width:60px; margin-bottom:10px;"
+    >
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -92,25 +97,46 @@
   </div>
 
   <script>
+    const stock = 10;
+
     function addToCart() {
-      const product = {
-        id: "xbox-elite",
-        name: "Xbox Elite Controller",
-        price: 4999,
-        qty: 1
-      };
+      const qtyInput = document.getElementById("qty");
+      const qty = parseInt(qtyInput.value);
+
+      if (qty > stock) {
+        alert("Seçtiğiniz adet stoktan fazla ❌");
+        qtyInput.value = stock;
+        return;
+      }
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
 
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.qty += 1;
+      const item = cart.find(i => i.id === "xbox-elite");
+
+      if (item) {
+        item.qty += qty;
       } else {
-        cart.push(product);
+        cart.push({
+          id: "xbox-elite",
+          name: "Xbox Elite Controller",
+          price: 4999,
+          qty: qty
+        });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("Xbox Elite Controller sepete eklendi 🛒");
+
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+
+      setTimeout(() => {
+        btn.innerText = "🛒 Sepete Ekle";
+      }, 2000);
     }
   </script>
 
