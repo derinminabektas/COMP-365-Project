@@ -20,10 +20,10 @@
     }
    img {
   width: 100%;
-  max-width: 350px;   /* resmin maksimum genişliği */
+  max-width: 350px;   
   height: auto;
   display: block;
-  margin: 0 auto;     /* ortalamak için */
+  margin: 0 auto;    
   border-radius: 12px;
 }
     .price {
@@ -68,29 +68,29 @@
 <body>
 
   <div class="card">
-    <h1>Pc Standart</h1>
+    <h1>Forza Horizon 5 game </h1>
 
-    <img src="https://breunor.com/cdn/shop/files/rossa_7b01eaf6-eb4f-45b2-9437-c00d4b4dc97d.jpg?v=1765271046&width=1024" >
+    <img src="https://m.media-amazon.com/images/I/81dHdXKHyPL._AC_UF1000,1000_QL80_.jpg" >
 
-    <p class="price">₺25.999</p>
-    <p class="stock">Stok Durumu: 5 adet mevcut</p>
+    <p class="price">₺1.499</p>
+    <p class="stock">Stok Durumu: 20 adet mevcut</p>
 
     <p>
-      Oyun bilgisayarı, yüksek performanslı donanımıyla akıcı ve hızlı bir oyun deneyimi sunar. Güçlü işlemci, gelişmiş ekran kartı ve yüksek çözünürlüklü grafik desteği ile öne çıkar.
+ Forza Horizon 5, Meksika’nın büyüleyici ve çeşitli açık dünyasında geçen, yüksek tempolu bir yarış deneyimi sunar. Gerçekçi sürüş dinamikleri, detaylı araç modellemeleri ve dinamik hava koşullarıyla her yarışta farklı bir heyecan yaşatır.
     </p>
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
   <script>
     function addToCart() {
       const product = {
-        id: "pc",
-        name: "Pc Standart",
-        price: 25999,
+        id: "forza",
+        name: "Forza Horizon 5",
+        price: 1499,
         qty: 1
       };
 
@@ -104,7 +104,7 @@
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("Pc sepete eklendi 🛒");
+      alert("Forza Horizon 5 sepete eklendi 🛒");
     }
   </script>
 

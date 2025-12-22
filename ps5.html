@@ -18,10 +18,14 @@
       padding:20px;
       border-radius:12px;
     }
-    img {
-      width:100%;
-      border-radius:12px;
-    }
+     img {
+  width: 100%;
+  max-width: 350px;   /* resmin maksimum genişliği */
+  height: auto;
+  display: block;
+  margin: 0 auto;     /* ortalamak için */
+  border-radius: 12px;
+}
     .price {
       font-size:24px;
       font-weight:bold;
@@ -64,11 +68,11 @@
 <body>
 
   <div class="card">
-    <h1>PlayStation 5 Standart</h1>
+    <h1>PlayStation 5 pro</h1>
 
-    <img src="https://images.unsplash.com/photo-1606813907291-46a9892ce20b?q=80&w=1200&auto=format&fit=crop" alt="PS5">
+    <img src="https://cdn.myikas.com/images/e737b8d4-9417-41ee-8583-1bac53f2726a/f5bc2781-12c3-4fd2-8c7f-7e8bc09cb985/3840/asset-mms-147359875.webp">
 
-    <p class="price">₺25.999</p>
+    <p class="price">37.999</p>
     <p class="stock">Stok Durumu: 12 adet mevcut</p>
 
     <p>
@@ -78,7 +82,7 @@
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
@@ -87,7 +91,7 @@
       const product = {
         id: "ps5-std",
         name: "PlayStation 5 Standart",
-        price: 25999,
+        price: 37999,
         qty: 1
       };
 

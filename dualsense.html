@@ -20,10 +20,10 @@
     }
    img {
   width: 100%;
-  max-width: 350px;   /* resmin maksimum genişliği */
+  max-width: 350px;   
   height: auto;
   display: block;
-  margin: 0 auto;     /* ortalamak için */
+  margin: 0 auto;    
   border-radius: 12px;
 }
     .price {
@@ -68,41 +68,44 @@
 <body>
 
   <div class="card">
-    <h1>xbox series x </h1>
+    <h1>dualSense </h1>
 
-    <img src="https://cdn03.ciceksepeti.com/cicek/kcm78499017-1/L/xbox-series-x-1-tb-ssd-cift-kol-xbox-x-xbox-x-xbox-xbox-xbox-series-x-ikinci-el-kcm78499017-1-e92e852939a746ba850f8e930c0616f0.jpg" >
+    <img src="https://m.media-amazon.com/images/I/61CkSA9vPXS.jpg" >
 
-    <p class="price">₺24.999</p>
-    <p class="stock">Stok Durumu: 8 adet mevcut</p>
+    <p class="price">₺3.999</p>
+    <p class="stock">Stok Durumu: 15 adet mevcut</p>
 
     <p>
-      Xbox Series X, güçlü donanımı sayesinde akıcı ve hızlı bir oyun deneyimi sunar. Yüksek performanslı işlemcisi, gelişmiş grafik gücü ve yüksek çözünürlüklü oyun desteği ile öne çıkar.
+      DualSense kablosuz kontrolcü, gelişmiş titreşim teknolojisi ve uyarlanabilir tetikleri sayesinde oyunlarda daha gerçekçi ve sürükleyici bir deneyim sunar. Ergonomik tasarımı ve hassas kontrol yapısıyla öne çıkar.
     </p>
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
   <script>
-     function addToCart() {
-    let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
-
-    const item = cart.find(i => i.id === "xbox-series-x");
-
-    if (item) {
-      item.qty += 1;
-    } else {
-      cart.push({
-        id: "xbox-series-x",
+    function addToCart() {
+      const product = {
+        id: "dualSense",
+        name: "DualSense Kablosuz Kontrolcü",
+        price: 3999,
         qty: 1
-      });
-    }
+      };
 
-    localStorage.setItem("weeb_cart", JSON.stringify(cart));
-    alert("Xbox Series X sepete eklendi 🛒");
-  }
+      let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
+
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push(product);
+      }
+
+      localStorage.setItem("weeb_cart", JSON.stringify(cart));
+      alert("dualSense sepete eklendi 🛒");
+    }
   </script>
 
 </body>

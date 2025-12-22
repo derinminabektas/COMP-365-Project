@@ -20,10 +20,10 @@
     }
    img {
   width: 100%;
-  max-width: 350px;   
+  max-width: 350px;   /* resmin maksimum genişliği */
   height: auto;
   display: block;
-  margin: 0 auto;    
+  margin: 0 auto;     /* ortalamak için */
   border-radius: 12px;
 }
     .price {
@@ -68,29 +68,29 @@
 <body>
 
   <div class="card">
-    <h1>dualSense </h1>
+    <h1>Pc Standart</h1>
 
-    <img src="https://m.media-amazon.com/images/I/61CkSA9vPXS.jpg" >
+    <img src="https://breunor.com/cdn/shop/files/rossa_7b01eaf6-eb4f-45b2-9437-c00d4b4dc97d.jpg?v=1765271046&width=1024" >
 
-    <p class="price">₺3.999</p>
-    <p class="stock">Stok Durumu: 15 adet mevcut</p>
+    <p class="price">₺25.999</p>
+    <p class="stock">Stok Durumu: 5 adet mevcut</p>
 
     <p>
-      DualSense kablosuz kontrolcü, gelişmiş titreşim teknolojisi ve uyarlanabilir tetikleri sayesinde oyunlarda daha gerçekçi ve sürükleyici bir deneyim sunar. Ergonomik tasarımı ve hassas kontrol yapısıyla öne çıkar.
+      Oyun bilgisayarı, yüksek performanslı donanımıyla akıcı ve hızlı bir oyun deneyimi sunar. Güçlü işlemci, gelişmiş ekran kartı ve yüksek çözünürlüklü grafik desteği ile öne çıkar.
     </p>
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
-      <a href="Untitled-1.html" class="back">← Ana Sayfaya Dön</a>
+      <a href="index.html" class="back">← Ana Sayfaya Dön</a>
     </div>
   </div>
 
   <script>
     function addToCart() {
       const product = {
-        id: "dualSense",
-        name: "DualSense Kablosuz Kontrolcü",
-        price: 3999,
+        id: "pc",
+        name: "Pc Standart",
+        price: 25999,
         qty: 1
       };
 
@@ -104,7 +104,7 @@
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("dualSense sepete eklendi 🛒");
+      alert("Pc sepete eklendi 🛒");
     }
   </script>
 
