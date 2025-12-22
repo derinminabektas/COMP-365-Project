@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Nintendo Switch Detay</title>
+    <title>Nintendo Switch OLED Detay</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,10 +20,10 @@
         }
         img {
             width: 100%;
-            max-width: 350px;   /* resmin maksimum genişliği */
+            max-width: 350px;
             height: auto;
             display: block;
-            margin: 0 auto;     /* ortalamak için */
+            margin: 0 auto;
             border-radius: 12px;
         }
         .price {
@@ -63,11 +63,16 @@
             justify-content:center;
             font-size: 16px;
             cursor: pointer;
-            box-sizing: border-box;
             border-radius: 10px;
             padding: 12px;
             font-weight: bold;
             flex: 1;
+        }
+        .qty {
+            width:70px;
+            padding:6px;
+            font-size:16px;
+            margin-top:10px;
         }
     </style>
 </head>
@@ -76,14 +81,25 @@
 <div class="card">
     <h1>Nintendo Switch OLED</h1>
 
-    <img src="https://cdn.akakce.com/z/nintendo/nintendo-switch.jpg" >
+    <img src="https://cdn.akakce.com/z/nintendo/nintendo-switch.jpg">
 
     <p class="price">₺17.999</p>
-    <p class="stock">Stok Durumu: 6 adet mevcut</p>
+    <p class="stock">Stok Durumu: <span id="stockText">6</span> adet mevcut</p>
 
     <p>
-        Nintendo'nun en sevilen oyun konsolu switch şimdi OLED ekranıyla oyuncularla buluşuyor. Geniş birikim araçları canlı renkler ve yüksek kontrast, ister en yüksek hızda yarışın ister düşmanlara karşı savaşta zengin bir elde kulanım ve masaüstü oyun deneyimi sunarak oyunlara hayat verir.
+        Nintendo'nun en sevilen oyun konsolu Switch, şimdi OLED ekranıyla oyuncularla
+        buluşuyor. Canlı renkler, yüksek kontrast ve gelişmiş ekran kalitesi sayesinde
+        elde taşınabilir ve masaüstü modlarında üst düzey oyun deneyimi sunar.
     </p>
+
+    <!-- SAYAÇ -->
+    <input 
+        type="number" 
+        id="qty" 
+        class="qty"
+        min="1" 
+        value="1"
+    >
 
     <div class="actions">
         <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -92,25 +108,46 @@
 </div>
 
 <script>
+    const stock = 6;
+
     function addToCart() {
-        const product = {
-            id: "switch-oled",
-            name: "Nintendo Switch OLED",
-            price: 17999,
-            qty: 1
-        };
+        const qtyInput = document.getElementById("qty");
+        let qty = parseInt(qtyInput.value);
+
+        if (qty < 1) {
+            alert("En az 1 adet seçmelisiniz ❌");
+            return;
+        }
+
+        if (qty > stock) {
+            alert("Seçtiğiniz adet stoktan fazla ❌");
+            qtyInput.value = stock;
+            return;
+        }
 
         let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-        const existing = cart.find(item => item.id === product.id);
+        const existing = cart.find(item => item.id === "switch-oled");
+
         if (existing) {
-            existing.qty += 1;
+            existing.qty += qty;
         } else {
-            cart.push(product);
+            cart.push({
+                id: "switch-oled",
+                name: "Nintendo Switch OLED",
+                price: 17999,
+                qty: qty
+            });
         }
 
         localStorage.setItem("weeb_cart", JSON.stringify(cart));
-        alert("Nintendo Switch OLED sepete eklendi 🛒");
+
+        const btn = document.querySelector(".add");
+        btn.innerText = "✔ Sepete Eklendi";
+
+        setTimeout(() => {
+            btn.innerText = "🛒 Sepete Ekle";
+        }, 2000);
     }
 </script>
 
