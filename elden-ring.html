@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Elden Ring Detay</title>
+  <title>Elden Ring | Ürün Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,13 @@
       padding:20px;
       border-radius:12px;
     }
-   img {
-  width: 100%;
-  max-width: 350px;   
-  height: auto;
-  display: block;
-  margin: 0 auto;    
-  border-radius: 12px;
-}
+    img {
+      width:100%;
+      max-width:350px;
+      display:block;
+      margin:0 auto;
+      border-radius:12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -54,36 +53,48 @@
       background:#32c48d;
       color:#062b1e;
     }
-   .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 16px;
-  cursor: pointer;
-  box-sizing: border-box;
-  border-radius: 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
+    .back {
+            background:#ff4d6d;
+            color:#fff;
+            text-decoration:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            flex: 1;
+        }
+    input {
+      width:70px;
+      padding:6px;
+      margin-top:10px;
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h1>Elden Ring game </h1>
+    <h1>Elden Ring</h1>
 
-    <img src="https://i0.shbdn.com/photos/94/79/94/x5_1220947994btj.jpg" >
+    <img src="https://i0.shbdn.com/photos/94/79/94/x5_1220947994btj.jpg">
 
-    <p class="price">₺1.599</p>
-    <p class="stock">Stok Durumu: 25 adet mevcut</p>
+    <p class="price">1.599 ₺</p>
+    <p class="stock">Stok Durumu: <strong id="stockText">25</strong> adet</p>
 
     <p>
-    Elden Ring, geniş ve karanlık açık dünyasıyla oyunculara keşif özgürlüğü sunar. Zorlu düşmanlar, derin hikâye anlatımı ve stratejiye dayalı savaş sistemiyle unutulmaz bir aksiyon-RPG deneyimi yaşatır. Etkileyici atmosferi, güçlü boss savaşları ve yüksek tekrar oynanabilirliği sayesinde oyuncuları uzun süre ekran başına kilitler.
+      Elden Ring, geniş ve karanlık açık dünyasıyla oyunculara keşif özgürlüğü sunar.
+      Zorlu düşmanlar, derin hikâye anlatımı ve stratejiye dayalı savaş sistemiyle
+      unutulmaz bir aksiyon-RPG deneyimi yaşatır.
     </p>
+
+    <label>Adet:</label><br>
+    <input type="number" 
+    id="qty" 
+    min="1" 
+    value="1">
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -92,25 +103,46 @@
   </div>
 
   <script>
+    const STOCK = 25;
+
     function addToCart() {
-      const product = {
-        id: "elden-ring",
-        name: "Elden Ring",
-        price: 1599,
-        qty: 1
-      };
+      const qtyInput = document.getElementById("qty");
+      let qty = parseInt(qtyInput.value);
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
+
+      if (qty > STOCK) {
+        alert("Stoktan fazla seçemezsiniz");
+        qty = STOCK;
+        qtyInput.value = STOCK;
+        return;
+      }
 
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(item => item.id === product.id);
+      const existing = cart.find(i => i.id === "elden-ring");
+
       if (existing) {
-        existing.qty += 1;
+        if (existing.qty + qty > STOCK) {
+          existing.qty = STOCK;
+        } else {
+          existing.qty += qty;
+        }
       } else {
-        cart.push(product);
+        cart.push({
+          id: "elden-ring",
+          qty: qty
+        });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("elden ring sepete eklendi 🛒");
+
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+      setTimeout(() => btn.innerText = "🛒 Sepete Ekle", 2000);
     }
   </script>
 
