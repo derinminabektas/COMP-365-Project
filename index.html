@@ -158,11 +158,11 @@
       query: '',
       platform: 'all',
       type: 'all',
-      cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]')
-    };
+      cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]') //Eğer kullanıcı siteye ilk kez giriyorsa ve sepeti boşsa, hata vermemesi için boş bir liste ([]) oluşturur.
+    }
 
     const formatPrice = (n) => '₺' + n.toLocaleString('tr-TR');
-    const saveCart = () => localStorage.setItem('weeb_cart', JSON.stringify(state.cart));
+    const saveCart = () => localStorage.setItem('weeb_cart', JSON.stringify(state.cart)); //tarayıcıda veriler string olarak tanımlanır ve biz de burda parse komutu ile tekrar obje/liste methoduna çeviriyoruz.
     
     const grid = document.getElementById('grid');
     const cartBody = document.getElementById('cartBody');
@@ -288,7 +288,17 @@ saveCart();
     document.getElementById('typeSelect').addEventListener('change', e => { state.type = e.target.value; renderGrid(); });
     document.getElementById('cartOpenBtn').addEventListener('click', () => cartPanel.classList.add('open'));
     document.getElementById('cartCloseBtn').addEventListener('click', () => cartPanel.classList.remove('open'));
-    document.getElementById('checkoutBtn').addEventListener('click', () => alert('Ödeme sistemine yönlendiriliyorsunuz...'));
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+  if (state.cart.length === 0) {
+    alert("Sepetiniz boş!");
+    return;
+  }
+  alert("Ödeme başarıyla tamamlandı ✅");
+  state.cart = [];
+  saveCart();
+  renderCart();
+  cartPanel.classList.remove('open');
+});
 
     // Başlangıç
     renderGrid();
