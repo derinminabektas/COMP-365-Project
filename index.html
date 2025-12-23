@@ -163,7 +163,7 @@
       query: '',
       platform: 'all',
       type: 'all',
-      sort: 'default', // Sıralama için eklendi
+      sort: 'default',
       cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]')
     };
 
@@ -175,11 +175,11 @@
     const cartCountEl = document.getElementById('cartCount');
     const cartPanel = document.getElementById('cartPanel');
 
-    // --- ANA FONKSİYON: Ürünleri Listeleme ---
+
     function renderGrid() {
       const q = state.query.toLowerCase();
 
-      // 1. Filtreleme
+
       let filtered = PRODUCTS.filter(p => {
         const matchesQuery = p.name.toLowerCase().includes(q);
         const matchesPlatform = state.platform === 'all' || p.platform === state.platform;
@@ -187,14 +187,14 @@
         return matchesQuery && matchesPlatform && matchesType;
       });
 
-      // 2. Sıralama
+
       if (state.sort === 'price-asc') {
         filtered.sort((a, b) => a.price - b.price);
       } else if (state.sort === 'price-desc') {
         filtered.sort((a, b) => b.price - a.price);
       }
 
-      // 3. Ekrana Basma
+
       grid.innerHTML = filtered.map(p => `
         <div class="card">
           <img src="${p.img}" alt="${p.name}">
@@ -250,7 +250,7 @@
     }
 
     function renderCart() {
-      // Geçersiz ürünleri temizle
+
       state.cart = state.cart.filter(item => PRODUCTS.some(p => p.id === item.id));
       saveCart();
 
@@ -288,7 +288,6 @@
       document.getElementById('cartTotal').textContent = formatPrice(total);
     }
 
-    // Event Listeners
     document.getElementById('searchInput').addEventListener('input', e => { state.query = e.target.value; renderGrid(); });
     document.getElementById('sortSelect').addEventListener('change', e => { state.sort = e.target.value; renderGrid(); }); // Sıralama dinleyicisi
     document.getElementById('platformSelect').addEventListener('change', e => { state.platform = e.target.value; renderGrid(); });
