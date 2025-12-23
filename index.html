@@ -92,6 +92,11 @@
           <option value="console">Konsol</option>
           <option value="accessory">Aksesuar</option>
         </select>
+        <select id="sortSelect">
+          <option value="default">Sıralama: Önerilen</option>
+          <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+          <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+        </select>
       </div>
       <button class="cart-btn" id="cartOpenBtn">Sepet <span id="cartCount">0</span></button>
     </div>
@@ -158,26 +163,38 @@
       query: '',
       platform: 'all',
       type: 'all',
-      cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]') //Eğer kullanıcı siteye ilk kez giriyorsa ve sepeti boşsa, hata vermemesi için boş bir liste ([]) oluşturur.
-    }
+      sort: 'default', // Sıralama için eklendi
+      cart: JSON.parse(localStorage.getItem('weeb_cart') || '[]')
+    };
 
     const formatPrice = (n) => '₺' + n.toLocaleString('tr-TR');
-    const saveCart = () => localStorage.setItem('weeb_cart', JSON.stringify(state.cart)); //tarayıcıda veriler string olarak tanımlanır ve biz de burda parse komutu ile tekrar obje/liste methoduna çeviriyoruz.
-    
+    const saveCart = () => localStorage.setItem('weeb_cart', JSON.stringify(state.cart));
+
     const grid = document.getElementById('grid');
     const cartBody = document.getElementById('cartBody');
     const cartCountEl = document.getElementById('cartCount');
     const cartPanel = document.getElementById('cartPanel');
 
+    // --- ANA FONKSİYON: Ürünleri Listeleme ---
     function renderGrid() {
       const q = state.query.toLowerCase();
-      const filtered = PRODUCTS.filter(p => {
+
+      // 1. Filtreleme
+      let filtered = PRODUCTS.filter(p => {
         const matchesQuery = p.name.toLowerCase().includes(q);
         const matchesPlatform = state.platform === 'all' || p.platform === state.platform;
         const matchesType = state.type === 'all' || p.type === state.type;
         return matchesQuery && matchesPlatform && matchesType;
       });
 
+      // 2. Sıralama
+      if (state.sort === 'price-asc') {
+        filtered.sort((a, b) => a.price - b.price);
+      } else if (state.sort === 'price-desc') {
+        filtered.sort((a, b) => b.price - a.price);
+      }
+
+      // 3. Ekrana Basma
       grid.innerHTML = filtered.map(p => `
         <div class="card">
           <img src="${p.img}" alt="${p.name}">
@@ -194,6 +211,7 @@
         </div>
       `).join('');
     }
+    // -----------------------------------------
 
     function addToCart(id) {
       const p = PRODUCTS.find(x => x.id === id);
@@ -213,96 +231,86 @@
       const item = state.cart.find(x => x.id === id);
       const product = PRODUCTS.find(x => x.id === id);
       if (!item || !product) return;
-      
+
       item.qty += delta;
       if (item.qty <= 0) {
         state.cart = state.cart.filter(x => x.id !== id);
       } else if (item.qty > product.stock) {
         item.qty = product.stock;
       }
-      
+
       saveCart();
       renderCart();
     }
 
-
     function clearCart() {
-
-  state.cart = [];
-  saveCart();
-  renderCart();
-}
-
+      state.cart = [];
+      saveCart();
+      renderCart();
+    }
 
     function renderCart() {
+      // Geçersiz ürünleri temizle
+      state.cart = state.cart.filter(item => PRODUCTS.some(p => p.id === item.id));
+      saveCart();
 
-      state.cart = state.cart.filter(item =>
-  PRODUCTS.some(p => p.id === item.id)
-);
-saveCart();
- const count = state.cart
-  .filter(item => PRODUCTS.some(p => p.id === item.id))
-  .reduce((a, b) => a + b.qty, 0);
-  cartCountEl.textContent = count;
+      const count = state.cart.reduce((a, b) => a + b.qty, 0);
+      cartCountEl.textContent = count;
 
-  let total = 0;
+      let total = 0;
 
-  const validItems = state.cart.filter(item =>
-    PRODUCTS.some(p => p.id === item.id)
-  );
+      if (state.cart.length === 0) {
+        cartBody.innerHTML = '<div class="empty">Sepetiniz boş.</div>';
+        document.getElementById('cartTotal').textContent = '₺0';
+        return;
+      }
 
-  if (validItems.length === 0) {
-    cartBody.innerHTML = '<div class="empty">Sepetiniz boş.</div>';
-    document.getElementById('cartTotal').textContent = '₺0';
-    return;
-  }
+      cartBody.innerHTML = state.cart.map(item => {
+        const p = PRODUCTS.find(x => x.id === item.id);
+        total += p.price * item.qty;
 
-  cartBody.innerHTML = validItems.map(item => {
-    const p = PRODUCTS.find(x => x.id === item.id);
+        return `
+          <div class="cart-item">
+            <img src="${p.img}">
+            <div class="grow">
+              <div style="font-weight:700; font-size:14px">${p.name}</div>
+              <div class="muted">${formatPrice(p.price)}</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px">
+              <button class="btn outline" style="padding:2px 8px" onclick="changeQty('${item.id}', -1)">-</button>
+              <span>${item.qty}</span>
+              <button class="btn outline" style="padding:2px 8px" onclick="changeQty('${item.id}', 1)">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
 
-    total += p.price * item.qty;
-
-    return `
-      <div class="cart-item">
-        <img src="${p.img}">
-        <div class="grow">
-          <div style="font-weight:700; font-size:14px">${p.name}</div>
-          <div class="muted">${formatPrice(p.price)}</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px">
-          <button class="btn outline" style="padding:2px 8px" onclick="changeQty('${item.id}', -1)">-</button>
-          <span>${item.qty}</span>
-          <button class="btn outline" style="padding:2px 8px" onclick="changeQty('${item.id}', 1)">+</button>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  document.getElementById('cartTotal').textContent = formatPrice(total);
-}
-
+      document.getElementById('cartTotal').textContent = formatPrice(total);
+    }
 
     // Event Listeners
     document.getElementById('searchInput').addEventListener('input', e => { state.query = e.target.value; renderGrid(); });
+    document.getElementById('sortSelect').addEventListener('change', e => { state.sort = e.target.value; renderGrid(); }); // Sıralama dinleyicisi
     document.getElementById('platformSelect').addEventListener('change', e => { state.platform = e.target.value; renderGrid(); });
     document.getElementById('typeSelect').addEventListener('change', e => { state.type = e.target.value; renderGrid(); });
     document.getElementById('cartOpenBtn').addEventListener('click', () => cartPanel.classList.add('open'));
     document.getElementById('cartCloseBtn').addEventListener('click', () => cartPanel.classList.remove('open'));
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-  if (state.cart.length === 0) {
-    alert("Sepetiniz boş!");
-    return;
-  }
-  alert("Ödeme başarıyla tamamlandı ✅");
-  state.cart = [];
-  saveCart();
-  renderCart();
-  cartPanel.classList.remove('open');
-});
+      if (state.cart.length === 0) {
+        alert("Sepetiniz boş!");
+        return;
+      }
+      alert("Ödeme başarıyla tamamlandı ✅");
+      state.cart = [];
+      saveCart();
+      renderCart();
+      cartPanel.classList.remove('open');
+    });
 
-    // Başlangıç
+
     renderGrid();
     renderCart();
+
   </script>
 </body>
 </html>
