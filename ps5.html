@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Ürün Detay</title>
+  <title>PS5 Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,39 +35,60 @@
       margin-top:10px;
       color:#32c48d;
     }
+    .qty-box {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:15px;
+    }
+    .qty-box button {
+      width:36px;
+      height:36px;
+      font-size:18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      background:#26263a;
+      color:#fff;
+    }
+    .qty-box input {
+      width:50px;
+      text-align:center;
+      font-size:16px;
+      border-radius:8px;
+      border:none;
+    }
     .actions {
       margin-top:20px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
-    button {
+    .add {
       flex:1;
-      padding:12px;
+      background:#32c48d;
+      color:#062b1e;
       border:none;
+      padding:12px;
       border-radius:10px;
-      font-size:16px;
       font-weight:bold;
       cursor:pointer;
     }
-    .add {
-      background:#32c48d;
-      color:#062b1e;
+
+    .back {
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: bold;
+      flex: 1;
     }
-   .back {
-            background:#ff4d6d;
-            color:#fff;
-            text-decoration:none;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 10px;
-            padding: 12px;
-            font-weight: bold;
-            flex: 1;
-        }
   </style>
 </head>
 <body>
@@ -77,21 +98,19 @@
 
     <img src="https://cdn.vatanbilgisayar.com/Upload/PRODUCT/sony/thumb/154462-1_small.jpg"
 
-    <p class="price">37.999 ₺</p>
+    <p class="price">37.999₺</p>
     <p class="stock">Stok Durumu: 12 adet mevcut</p>
 
     <p>
       PlayStation 5 Pro, gelişmiş donanımı ve üst düzey performansıyla yeni nesil oyun deneyimini zirveye taşır. Daha güçlü grafik işlemcisi sayesinde yüksek çözünürlükte, daha akıcı ve detaylı görüntüler sunar. Ray Tracing teknolojisiyle gerçekçi ışıklandırma ve gölgeler sağlanırken, ultra hızlı SSD sayesinde oyunlar neredeyse anında yüklenir.
     </p>
 
-   
-    <input
-      type="number"
-      id="qty"
-      min="1"
-      value="1"
-      style="width:60px; margin-bottom:10px;"
-    >
+
+    <div class="qty-box">
+      <button onclick="changeQty(-1)">−</button>
+      <input type="number" id="qty" value="1" min="1">
+      <button onclick="changeQty(1)">+</button>
+    </div>
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -100,46 +119,40 @@
   </div>
 
   <script>
-    const stock = 12;
+    const PRODUCT_ID = "ps5-std";
+    const STOCK = 12;
+
+    function changeQty(delta) {
+      const input = document.getElementById("qty");
+      let value = parseInt(input.value) + delta;
+
+      if (value < 1) value = 1;
+      if (value > STOCK) value = STOCK;
+
+      input.value = value;
+    }
 
     function addToCart() {
-      const qtyInput = document.getElementById("qty");
-      const qty = parseInt(qtyInput.value);
-
-      if (qty > stock) {
-        alert("Seçtiğiniz adet stoktan fazla ❌");
-        qtyInput.value = stock;
-        return;
-      }
-
-      if (qty < 1) {
-        alert("En az 1 adet seçmelisiniz");
-        return;
-      }
-
+      const qty = parseInt(document.getElementById("qty").value);
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const item = cart.find(i => i.id === "dualsense");
+      const item = cart.find(i => i.id === PRODUCT_ID);
 
       if (item) {
+        if (item.qty + qty > STOCK) {
+          alert("Stok sınırı aşıldı ❌");
+          return;
+        }
         item.qty += qty;
       } else {
-        cart.push({
-          id: "ps5-std",
-          name: "PlayStation 5 pro",
-          price: 37999,
-          qty: qty
-        });
+        cart.push({ id: PRODUCT_ID, qty });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
 
       const btn = document.querySelector(".add");
       btn.innerText = "✔ Sepete Eklendi";
-
-      setTimeout(() => {
-        btn.innerText = "🛒 Sepete Ekle";
-      }, 2000);
+      setTimeout(() => btn.innerText = "🛒 Sepete Ekle", 2000);
     }
   </script>
 
