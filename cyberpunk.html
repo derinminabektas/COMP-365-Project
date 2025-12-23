@@ -19,11 +19,12 @@
       border-radius:12px;
     }
     img {
-      width:100%;
-      max-width:350px;
-      display:block;
-      margin:0 auto;
-      border-radius:12px;
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
     }
     .price {
       font-size:24px;
@@ -34,43 +35,59 @@
       margin-top:10px;
       color:#32c48d;
     }
+    .qty-box {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:15px;
+    }
+    .qty-box button {
+      width:36px;
+      height:36px;
+      font-size:18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      background:#26263a;
+      color:#fff;
+    }
+    .qty-box input {
+      width:50px;
+      text-align:center;
+      font-size:16px;
+      border-radius:8px;
+      border:none;
+    }
     .actions {
       margin-top:20px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
-    button {
+    .add {
       flex:1;
-      padding:12px;
+      background:#32c48d;
+      color:#062b1e;
       border:none;
+      padding:12px;
       border-radius:10px;
-      font-size:16px;
       font-weight:bold;
       cursor:pointer;
     }
-    .add {
-      background:#32c48d;
-      color:#062b1e;
-    }
-     .back {
-            background:#ff4d6d;
-            color:#fff;
-            text-decoration:none;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 10px;
-            padding: 12px;
-            font-weight: bold;
-            flex: 1;
-        }
-    input {
-      width:70px;
-      padding:6px;
-      margin-top:10px;
+
+    .back {
+      background:#ff4d6d;
+      color:#fff;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: bold;
+      flex: 1;
     }
   </style>
 </head>
@@ -81,8 +98,8 @@
 
     <img src="https://image.api.playstation.com/vulcan/ap/rnd/202111/3013/bxSj4jO0KBqUgAbH3zuNjCje.jpg">
 
-    <p class="price">1.299 ₺</p>
-    <p class="stock">Stok Durumu: <strong>30</strong> adet</p>
+    <p class="price">1.299₺</p>
+    <p class="stock">Stok Durumu: 30 adet</p>
 
     <p>
       Cyberpunk 2077, Night City’nin neon ışıklarıyla dolu distopik dünyasında geçen,
@@ -90,8 +107,11 @@
       özgür oynanış seçenekleri ve etkileyici atmosferiyle unutulmaz bir macera yaşatır.
     </p>
 
-    <label>Adet:</label><br>
-    <input type="number" id="qty" min="1" value="1">
+    <div class="qty-box">
+      <button onclick="changeQty(-1)">−</button>
+      <input type="number" id="qty" value="1" min="1">
+      <button onclick="changeQty(1)">+</button>
+    </div>
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -100,39 +120,33 @@
   </div>
 
   <script>
+    const PRODUCT_ID = "cyberpunk";
     const STOCK = 30;
 
+    function changeQty(delta) {
+      const input = document.getElementById("qty");
+      let value = parseInt(input.value) + delta;
+
+      if (value < 1) value = 1;
+      if (value > STOCK) value = STOCK;
+
+      input.value = value;
+    }
+
     function addToCart() {
-      const qtyInput = document.getElementById("qty");
-      let qty = parseInt(qtyInput.value);
-
-      if (qty < 1) {
-        alert("En az 1 adet seçmelisiniz");
-        return;
-      }
-
-      if (qty > STOCK) {
-        alert("Stoktan fazla seçemezsiniz");
-        qty = STOCK;
-        qtyInput.value = STOCK;
-        return;
-      }
-
+      const qty = parseInt(document.getElementById("qty").value);
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(i => i.id === "cyberpunk");
+      const item = cart.find(i => i.id === PRODUCT_ID);
 
-      if (existing) {
-        if (existing.qty + qty > STOCK) {
-          existing.qty = STOCK;
-        } else {
-          existing.qty += qty;
+      if (item) {
+        if (item.qty + qty > STOCK) {
+          alert("Stok sınırı aşıldı ❌");
+          return;
         }
+        item.qty += qty;
       } else {
-        cart.push({
-          id: "cyberpunk",
-          qty: qty
-        });
+        cart.push({ id: PRODUCT_ID, qty });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
