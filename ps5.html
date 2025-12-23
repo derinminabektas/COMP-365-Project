@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>PlayStation 5 Detay</title>
+  <title>Ürün Detay</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,14 +18,14 @@
       padding:20px;
       border-radius:12px;
     }
-     img {
-  width: 100%;
-  max-width: 350px;   /* resmin maksimum genişliği */
-  height: auto;
-  display: block;
-  margin: 0 auto;     /* ortalamak için */
-  border-radius: 12px;
-}
+    img {
+      width: 100%;
+      max-width: 350px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
     .price {
       font-size:24px;
       font-weight:bold;
@@ -55,20 +55,19 @@
       color:#062b1e;
     }
    .back {
-  background:#ff4d6d;
-  color:#fff;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size: 16px;
-  cursor: pointer;
-  box-sizing: border-box;
-  border-radius: 10px;
-  padding: 12px;
-  font-weight: bold;
-  flex: 1;
-}
+            background:#ff4d6d;
+            color:#fff;
+            text-decoration:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: bold;
+            flex: 1;
+        }
   </style>
 </head>
 <body>
@@ -76,15 +75,23 @@
   <div class="card">
     <h1>PlayStation 5 pro</h1>
 
-    <img src="https://cdn.myikas.com/images/e737b8d4-9417-41ee-8583-1bac53f2726a/f5bc2781-12c3-4fd2-8c7f-7e8bc09cb985/3840/asset-mms-147359875.webp">
+    <img src="https://cdn.vatanbilgisayar.com/Upload/PRODUCT/sony/thumb/154462-1_small.jpg"
 
-    <p class="price">37.999</p>
+    <p class="price">37.999 ₺</p>
     <p class="stock">Stok Durumu: 12 adet mevcut</p>
 
     <p>
-      PlayStation 5, Sony’nin yeni nesil konsolu.
-      Ultra hızlı SSD, DualSense kontrolcü ve 4K oyun deneyimi sunar.
+      PlayStation 5 Pro, gelişmiş donanımı ve üst düzey performansıyla yeni nesil oyun deneyimini zirveye taşır. Daha güçlü grafik işlemcisi sayesinde yüksek çözünürlükte, daha akıcı ve detaylı görüntüler sunar. Ray Tracing teknolojisiyle gerçekçi ışıklandırma ve gölgeler sağlanırken, ultra hızlı SSD sayesinde oyunlar neredeyse anında yüklenir.
     </p>
+
+   
+    <input
+      type="number"
+      id="qty"
+      min="1"
+      value="1"
+      style="width:60px; margin-bottom:10px;"
+    >
 
     <div class="actions">
       <button class="add" onclick="addToCart()">🛒 Sepete Ekle</button>
@@ -93,25 +100,46 @@
   </div>
 
   <script>
+    const stock = 12;
+
     function addToCart() {
-      const product = {
-        id: "ps5-std",
-        name: "PlayStation 5 Standart",
-        price: 37999,
-        qty: 1
-      };
+      const qtyInput = document.getElementById("qty");
+      const qty = parseInt(qtyInput.value);
+
+      if (qty > stock) {
+        alert("Seçtiğiniz adet stoktan fazla ❌");
+        qtyInput.value = stock;
+        return;
+      }
+
+      if (qty < 1) {
+        alert("En az 1 adet seçmelisiniz");
+        return;
+      }
 
       let cart = JSON.parse(localStorage.getItem("weeb_cart") || "[]");
 
-      const existing = cart.find(item => item.id === product.id);
-      if (existing) {
-        existing.qty += 1;
+      const item = cart.find(i => i.id === "dualsense");
+
+      if (item) {
+        item.qty += qty;
       } else {
-        cart.push(product);
+        cart.push({
+          id: "ps5-std",
+          name: "PlayStation 5 pro",
+          price: 37999,
+          qty: qty
+        });
       }
 
       localStorage.setItem("weeb_cart", JSON.stringify(cart));
-      alert("PlayStation 5 sepete eklendi 🛒");
+
+      const btn = document.querySelector(".add");
+      btn.innerText = "✔ Sepete Eklendi";
+
+      setTimeout(() => {
+        btn.innerText = "🛒 Sepete Ekle";
+      }, 2000);
     }
   </script>
 
